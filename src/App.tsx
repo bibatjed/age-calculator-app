@@ -1,6 +1,6 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react";
-import "./App.css";
+import { ChangeEvent, useState } from "react";
 import IconArrowSource from "./assets/images/icon-arrow.svg";
+import Input from "./components/Input";
 
 type Date = {
   day: string;
@@ -20,13 +20,6 @@ function App() {
     year: "",
   });
   const [error, setError] = useState<boolean>(false);
-  console.log("rendering");
-
-  const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
-      e.preventDefault();
-    }
-  };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setError(false);
@@ -37,77 +30,101 @@ function App() {
   };
 
   const onClick = () => {
-    const birthday = new Date(`${date.month} ${date.day} ${date.year}`);
-    if (birthday.toString() == "Invalid Date") {
-      setError(true);
-      return;
+    try {
+      const birthday = new Date(`${date.month} ${date.day} ${date.year}`);
+      if (birthday.toString() == "Invalid Date") {
+        setError(true);
+        return;
+      }
+      const currentDate = new Date();
+
+      const diffTime = Math.abs(Number(currentDate) - Number(birthday));
+      const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+      const diffMonths = Math.floor(
+        (diffTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30)
+      );
+      const diffDays = Math.floor(
+        (diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
+      );
+
+      setAge({
+        day: diffDays.toString(),
+        month: diffMonths.toString(),
+        year: diffYears.toString(),
+      });
+    } catch (e) {
+      console.log(e);
     }
-    const currentDate = new Date();
-
-    const diffTime = Math.abs(Number(currentDate) - Number(birthday));
-    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
-    const diffMonths = Math.floor(
-      (diffTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30)
-    );
-    const diffDays = Math.floor(
-      (diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
-    );
-
-    setAge({
-      day: diffDays.toString(),
-      month: diffMonths.toString(),
-      year: diffYears.toString(),
-    });
   };
   return (
-    <main>
-      {/* Input */}
-      <div>
-        <span>Day</span>
-        <input
-          onKeyDown={onKeyPress}
-          type="number"
-          name="day"
-          onChange={onChange}
-          value={date.day}
-          placeholder="DD"
-        />
-      </div>
-      <div>
-        <span>Month</span>
-        <input
-          onKeyDown={onKeyPress}
-          type="number"
-          name="month"
-          onChange={onChange}
-          value={date.month}
-          placeholder="MM"
-        />
-      </div>
-      <div>
-        <span>Year</span>
-        <input
-          onKeyDown={onKeyPress}
-          name="year"
-          onChange={onChange}
-          value={date.year}
-          placeholder="YYYY"
-        />
-      </div>
-      <button
-        type="button"
-        className="bg-c-purple flex items-center justify-center rounded-full p-5"
-        onClick={onClick}
-      >
-        {" "}
-        <img src={IconArrowSource} className="w-8 h-8" />
-      </button>
-      <div>
-        <div>{age.year || "--"} years</div>
-        <div>{age.month || "--"} months</div>
-        <div>{age.day || "--"} days</div>
-      </div>
-    </main>
+    <div className="h-[100vh] bg-c-light-grey flex justify-center">
+      <main className="bg-c-white w-[90%] p-5 py-12 rounded-[25px_25px_90px_25px] h-[420px] mt-16">
+        {/* Input */}
+        <div className="flex justify-center flex-row gap-6">
+          <div>
+            <span className="font-poppins font-bold text-sm text-c-smokey-grey tracking-widest">
+              Day
+            </span>
+            <div className="w-20">
+              <Input
+                placeholder="DD"
+                name="day"
+                value={date.day}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div>
+            <span className="font-poppins font-bold text-sm text-c-smokey-grey tracking-widest">
+              Month
+            </span>
+            <div className="w-20">
+              <Input
+                placeholder="MM"
+                name="month"
+                value={date.month}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div>
+            <span className="font-poppins font-bold text-sm text-c-smokey-grey tracking-widest">
+              Year
+            </span>
+            <div className="w-20">
+              <Input
+                placeholder="YYYY"
+                name="year"
+                value={date.year}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="w-full mt-5 flex items-center justify-center relative">
+          <span className="w-full absolute border-t-2 border-c-light-grey h-1"></span>
+          <button
+            type="button"
+            className="bg-c-purple h-14 w-14 z-10 flex items-center justify-center rounded-full "
+            onClick={onClick}
+          >
+            {" "}
+            <img src={IconArrowSource} className="w-8 h-7" />
+          </button>
+        </div>
+        <div className="flex flex-col gap-2 mt-6 font-poppins">
+          <span className="text-5xl text-c-off-black font-extrabold">
+            <span className="text-c-purple">{age.year || "--"}</span> years
+          </span>
+          <span className="text-5xl text-c-off-black font-extrabold">
+            <span className="text-c-purple">{age.month || "--"}</span> months
+          </span>
+          <span className="text-5xl text-c-off-black font-extrabold">
+            <span className="text-c-purple">{age.day || "--"}</span> days
+          </span>
+        </div>
+      </main>
+    </div>
   );
 }
 

@@ -122,9 +122,9 @@ function App() {
   };
   return (
     <div className="h-[100vh] bg-c-light-grey flex justify-center">
-      <main className="bg-c-white w-[90%] p-5 py-12 rounded-[25px_25px_90px_25px] h-[440px] mt-16">
+      <main className="bg-c-white w-[90%] max-w-[490px] p-7 py-12 rounded-[25px_25px_90px_25px] h-[440px] mt-16 flex flex-col justify-center">
         {/* Input */}
-        <div className="flex justify-center flex-row gap-6">
+        <div className="flex justify-center md:justify-start flex-row gap-6">
           <div>
             <span
               className={`${
@@ -184,10 +184,10 @@ function App() {
           </div>
         </div>
         <div className="w-full mt-11 flex items-center justify-center relative">
-          <span className="w-full absolute border-t-2 border-c-light-grey h-1"></span>
+          <span className="w-full absolute md:relative border-t-2 border-c-light-grey h-1"></span>
           <button
             type="button"
-            className="hover:bg-c-off-black bg-c-purple h-14 w-14 z-10 flex items-center justify-center rounded-full "
+            className="hover:bg-c-off-black bg-c-purple h-14 w-14 z-10 flex md:flex-shrink-0 items-center justify-center rounded-full "
             onClick={onClick}
           >
             {" "}
